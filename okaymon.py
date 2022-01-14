@@ -1,32 +1,26 @@
-from secrets import token_hex
-import json
+from data import Asset
+from settings import COLOR_MAP
 
-from settings import TOKEN_COMPLEXITY
-
-with open('data/colorMap.json') as f:
-    color_map = json.loads(f.read())
-
-class Okaymon:
-    id: int
+class Okaymon(Asset):
     gen: int
-    player: int
-    characteristic: str
+    player: str
+    nature: str
     color: str
     color_value: int
+    is_available: bool
+    
+    def assign_to_player(self, player_id: str) -> None:
+        self.player = player_id
+
     def __init__(self, gen: int, traits: object):
-        """
-        # traits
-        {
-            "characteristic": str,
-            "color": str
-        }
-        """
-        self.id = token_hex(TOKEN_COMPLEXITY)
+        super().__init__('okaymon')
+        # traits: {"nature": str, "color": str}
         self.gen = gen
         self.player = 0
-        self.characteristic = traits['characteristic']
+        self.nature = traits['nature']
         self.color = traits['color']
-        self.color_value = color_map[self.color]
+        self.color_value = COLOR_MAP[self.color]
+        self.is_available = False
     def __repr__(self):
         at = f"at {self.player} " if self.player else ""
-        return f"Gen {self.gen} Okaymon ({self.id}) {at}of nature \"{self.characteristic}\" holding a {self.color} item"
+        return f"Gen {self.gen} Okaymon ({self.id}) {at}of nature \"{self.nature}\" holding a {self.color} item"

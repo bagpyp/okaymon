@@ -1,21 +1,18 @@
-from secrets import token_hex
-
+from data import Asset
 from okayball import Okayball
 from settings import WALLET_LIMIT, GENERATIONS
 
 
-class Wallet:
-    address: str
+class Wallet(Asset):
     purchaseRecord: list[int]
 
-    def has_funds(self, ball: Okayball) -> bool:
+    def is_not_full(self, ball: Okayball) -> bool:
         return self.purchaseRecord[ball.gen] < WALLET_LIMIT
 
     def __init__(self) -> None:
-        # for testing, generate a len-42 hexdec
-        self.address = "0x" + token_hex(21)
+        super().__init__('wallet')
         self.purchaseRecord = [0] * GENERATIONS
     def __repr__(self) -> str:
-        return f"{self.address}\n{self.purchaseRecord}"
+        return f"{self.id}\n{self.purchaseRecord}"
 
 

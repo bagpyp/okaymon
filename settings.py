@@ -2,8 +2,14 @@ TOKEN_COMPLEXITY = 5
 
 GENERATIONS = 5
 OKAYMON = 10000
-CHARACTERISTICS = 2000
-CHARACTERISTIC_DISTRIBUTION = [
+OKAYBALLS = 10000
+
+WALLET_LIMIT = 6
+
+NATURES = 2000
+with open('in/natures.txt') as f:
+    NATURE_NAMES = f.read().splitlines()
+NATURE_DISTRIBUTION = [
     [2,1,1,1,0],
     [2,1,1,1,0],
     [2,1,1,0,1],
@@ -14,8 +20,9 @@ CHARACTERISTIC_DISTRIBUTION = [
     [0,0,0,2,3]
 ]
 
-COLORS: int = 10
-# value, distribution per gen
+COLORS = 10
+with open('in/colors.txt') as f:
+    COLOR_NAMES = f.read().splitlines()
 COLOR_DISTRIBUTION = [
     360,
     320,
@@ -40,4 +47,4 @@ COLOR_VALUES = [
     1.9,
     2.0
 ]
-WALLET_LIMIT: int = 6
+COLOR_MAP = dict(zip(COLOR_NAMES, COLOR_VALUES))

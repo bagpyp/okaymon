@@ -2,10 +2,18 @@
 
 # A python library for playing the Okaymon Gamified Drop without spending thousands of dollars
   
+You must have two files to play this game, 
   
-To initialize and run this application first clone the repo, then, in a terminal 
+1. in/colors.txt
+   - a 10-line file containing color names in _increasing order_ of value
+2. in/natures.txt
+   - a file containing 2000 _unique_ natures
+  
+## To run
   
 ```bash
-python -m pip install -r requirements.txt
-pytest -vs
+python3 -m pip install -r requirements.txt
+python3 game.py
 ```
+
+You should see pickle files appear in data/ which will hold the state of the game.

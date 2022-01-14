@@ -1,24 +1,18 @@
-from secrets import token_hex
+from data import Asset
 
-from settings import TOKEN_COMPLEXITY
-
-class Okayball:
-    id: int
+class Okayball(Asset):
     gen: int
-    player: int
-    
-    def assign_to_player(self, player_id: int) -> None:
+    player: str
+    is_available: bool
+
+    def assign_to_player(self, player_id: str) -> None:
         self.player = player_id
 
     def __init__(self, gen: int) -> None:
-        self.id = token_hex(TOKEN_COMPLEXITY)
+        super().__init__('okayball')
+        self.is_available = False
         self.gen = gen
-        self.player = 0
+        self.player = None
     def __repr__(self) -> str:
         at = f" at {self.player}" if self.player else ""
         return f"({self.gen})" + at
-
-class OkayballAvailabilityError(Exception):
-    def __init__(self, ball: Okayball) -> None:
-        self.message = f"Okayball {ball} is Unavailable."
-        super().__init__()

@@ -3,3 +3,5 @@
 .pytest_cache/
 *.cpython.idea/
 .idea/
+data/*.pkl
+in/*.txt

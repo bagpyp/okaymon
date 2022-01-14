@@ -1,31 +1,20 @@
-#%%
-import json
-from random import randint
-import pandas as pd
-from pprint import pprint
-
+#%% 
+import generator
+from okayball import Okayball
 from okaymon import Okaymon
-from settings import GENERATIONS, CHARACTERISTICS
+from player import Player
 
-with open('data/traits.json') as f:
-    traits = json.load(f)
+class Game:
+    okayballs: list[Okayball]
+    okaymon: list[Okaymon]
+    players: list[Player]
+    def __init__(self):
+        self.okayballs = generator.generate_okayballs()
+        self.okaymon = generator.generate_okaymon()
+        
 
-okaymon = []
-for gen in range(GENERATIONS):
-    colors = traits[gen]["colors"]
-    chars = traits[gen]["characteristics"]
-    for j in range(CHARACTERISTICS):
-        okaymon.append(
-            Okaymon(
-                gen,
-                {
-                    "color": colors.pop(randint(0,len(colors)-1)),
-                    "characteristic": chars.pop(randint(0,len(chars)-1))
-                }
-            )
-        )
-
-
-pprint(pd.Series(okaymon).sample(100).values.tolist())
-
-
+if __name__ == '__main__':
+    print('let the games begin!')
+    game = Game()
+    print(game.okayballs[:5])
+    print(game.okaymon[:5])
