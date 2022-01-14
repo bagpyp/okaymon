@@ -1,3 +1,5 @@
+#%%
+
 from random import randint
 from numpy import zeros
 
@@ -78,5 +80,5 @@ def generate_okayballs():
 
 
 if __name__ == '__main__':
-    generate_okaymon()
+    okaymon = generate_okaymon()
     generate_okayballs()
