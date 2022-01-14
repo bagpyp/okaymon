@@ -25,6 +25,9 @@ class Asset:
             if k != 'id':
                 tmp.loc[self.id, k] = v 
         self.modified = dt.datetime.now()
+    def __setattr__(self, __name, __value):
+        super().__setattr__(__name, __value)
+        self.update()
 
 def pickle(assets: list[Asset]):
     pd.DataFrame(
