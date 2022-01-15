@@ -17,6 +17,7 @@ from settings import (
     COLORS,
     COLOR_NAMES,
     COLOR_DISTRIBUTION,
+    PLAYERS
 )
 
 def generate_okaymon():
@@ -78,7 +79,12 @@ def generate_okayballs():
     pickle(okayballs)
     return okayballs
 
+def generate_players():
+    players = [Player() for i in range(PLAYERS)]
+    pickle(players)
+    return players
 
 if __name__ == '__main__':
     okaymon = generate_okaymon()
-    generate_okayballs()
+    okayballs = generate_okayballs()
+    players = generate_players()

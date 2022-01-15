@@ -18,6 +18,7 @@ class Player(Asset):
             ball.assign_to_player(self.id)
             self.wallet.purchaseRecord[ball.gen] += 1
             self.okayballs.append(ball)
+            self.update()
         else: 
             raise AllowablePurchasesError(self.wallet.purchaseRecord)
     def __init__(self):

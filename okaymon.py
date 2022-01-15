@@ -11,12 +11,13 @@ class Okaymon(Asset):
     
     def assign_to_player(self, player_id: str) -> None:
         self.player = player_id
+        self.update()
 
     def __init__(self, gen: int, traits: object):
-        super().__init__('okaymon')
         # traits: {"nature": str, "color": str}
+        super().__init__('okaymon')
         self.gen = gen
-        self.player = 0
+        self.player = None
         self.nature = traits['nature']
         self.color = traits['color']
         self.color_value = COLOR_MAP[self.color]

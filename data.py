@@ -13,20 +13,20 @@ class Asset:
     modified: dt.datetime
     type: str
     def __init__(self, type):
-        self.__dict__['type'] = type
-        self.__dict__['id'] = token_hex(TOKEN_COMPLEXITY)
-        self.__dict__['created'] = dt.datetime.now()
-        self.__dict__['modified'] = dt.datetime.now()
-    def __setattr__(self, __name, __value):
-        self.__dict__[__name] = __value
-        self.__dict__['modified'] = dt.datetime.now()
+        self.type = type
+        self.id = token_hex(TOKEN_COMPLEXITY)
+        self.created = dt.datetime.now()
+        self.modified = dt.datetime.now()
+    def update(self):
         # read pickle
         tmp = pd.read_pickle(
             path(self.type)
         )
         # update state
-        tmp.loc[self.id, __name] = __value 
-        tmp.loc[self.id, 'modified'] = dt.datetime.now()
+        self.modified = dt.datetime.now()
+        for k,v in self.__dict__.items():
+            if k != 'id':
+                tmp.loc[self.id, k] = v 
         # persist
         tmp.to_pickle(
             path(self.type)
