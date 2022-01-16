@@ -4,3 +4,4 @@
 *.cpython.idea/
 .idea/
 in/*.txt
+data/*.pkl

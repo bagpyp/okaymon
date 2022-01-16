@@ -15,5 +15,4 @@ class Okayball(Asset):
         self.gen = gen
         self.player = None
     def __repr__(self) -> str:
-        at = f" at {self.player}" if self.player else ""
-        return f"({self.gen})" + at
+        return f"({self.gen})" + ('' if self.is_available else "'")

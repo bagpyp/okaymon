@@ -13,6 +13,6 @@ class Wallet(Asset):
         super().__init__('wallet')
         self.purchaseRecord = [0] * GENERATIONS
     def __repr__(self) -> str:
-        return f"{self.id}\n{self.purchaseRecord}"
+        return f"{self.id}: {self.purchaseRecord}"
 
 

@@ -81,10 +81,8 @@ def generate_okayballs():
 
 def generate_players():
     players = [Player() for i in range(PLAYERS)]
-    pickle(players)
     return players
 
 if __name__ == '__main__':
     okaymon = generate_okaymon()
     okayballs = generate_okayballs()
-    players = generate_players()

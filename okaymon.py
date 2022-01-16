@@ -24,4 +24,4 @@ class Okaymon(Asset):
         self.is_available = False
     def __repr__(self):
         at = f"at {self.player} " if self.player else ""
-        return f"Gen {self.gen} Okaymon ({self.id}) {at}of nature \"{self.nature}\" holding a {self.color} item"
+        return f"[{self.gen}]" + ('' if self.is_available else "'")
