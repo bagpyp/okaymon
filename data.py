@@ -58,8 +58,7 @@ def batch_update(assets: list[Asset]):
             assets[0].type
         )
     )
-    df.update(
-        pd.DataFrame(
+    update = pd.DataFrame(
             [
                 a.__dict__
                 for a in assets
@@ -67,6 +66,9 @@ def batch_update(assets: list[Asset]):
         ).set_index(
             'id'
         )
+    update.modified = dt.datetime.now()
+    df.update(
+        update
     )
     df.to_pickle(
         path(

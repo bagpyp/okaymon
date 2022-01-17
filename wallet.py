@@ -6,7 +6,7 @@ from settings import WALLET_LIMIT, GENERATIONS
 class Wallet(Asset):
     purchaseRecord: list[int]
 
-    def is_not_full(self, ball: Okayball) -> bool:
+    def can_afford(self, ball: Okayball) -> bool:
         return self.purchaseRecord[ball.gen] < WALLET_LIMIT
 
     def __init__(self) -> None:

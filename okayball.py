@@ -7,6 +7,7 @@ class Okayball(Asset):
 
     def assign_to_player(self, player_id: str) -> None:
         self.player = player_id
+        self.is_available = False
         self.update()
 
     def __init__(self, gen: int) -> None:
