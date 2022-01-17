@@ -28,9 +28,17 @@ class Player(Asset):
         for gen in {b.gen for b in self.okayballs}:
             gen_balls = list(filter(lambda b: b.gen == gen, self.okayballs))
             for i in range(len(gen_balls)):
-                tokens.append(gen_balls[:i+1])
+                tokens.append(gen_balls[:min(i+1, gen+2)])
         return tokens
-    
+    def exchange_token(self, token: list[Okayball], okaymon: Okaymon):
+        okaymon.assign_to_player(self.id)
+        self.okaymon.append(okaymon)
+        for okayball in token:
+            self.okayballs.pop(
+                self.okayballs.index(okayball)
+            )
+            okayball.assign_to_player(None)
+
 
     def __init__(self):
         super().__init__('player')

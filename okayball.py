@@ -5,7 +5,7 @@ class Okayball(Asset):
     player: str
     is_available: bool
 
-    def assign_to_player(self, player_id: str) -> None:
+    def assign_to_player(self, player_id) -> None:
         self.player = player_id
         self.is_available = False
         self.update()
