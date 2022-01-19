@@ -6,6 +6,8 @@ OKAYBALLS = 10000
 
 WALLET_LIMIT = 6
 
+MAX_GEN_SCORE = int(OKAYMON/GENERATIONS)
+
 NATURES = 2000
 with open('in/natures.txt') as f:
     NATURE_NAMES = f.read().splitlines()
@@ -19,6 +21,7 @@ NATURE_DISTRIBUTION = [
     [0,0,2,2,1],
     [0,0,0,2,3]
 ]
+MAX_NATURE_SCORE = int(OKAYMON/NATURES)
 
 COLORS = 10
 with open('in/colors.txt') as f:

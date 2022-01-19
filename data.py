@@ -66,7 +66,7 @@ def batch_update(assets: list[Asset]):
         ).set_index(
             'id'
         )
-    update.modified = dt.datetime.now()
+    # update.modified = dt.datetime.now()
     df.update(
         update
     )

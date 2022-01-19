@@ -1,7 +1,8 @@
 
 #%% 
 import random
-from tqdm import tqdm
+# from tqdm import tqdm
+from collections import Counter
 
 import data
 import generator
@@ -15,7 +16,7 @@ from settings import (
     CHANCE_PLAYER_EXCHANGES
 )
 
-print = tqdm.write
+# print = tqdm.write
 def roll(chances):
     return random.random() < chances
 
@@ -32,6 +33,8 @@ class Game:
         return [b for b in self.okayballs if b.is_available]
     def available_okaymon(self, gen):
         return [m for m in self.okaymon if m.gen == gen]
+    def unavailable_okaymon(self):
+        return [m for m in self.okaymon if not m.is_available]
     def find_player(self, player_id):
         # may need to increase token complexity
         return [p for p in self.players if p.id == player_id][0]
@@ -48,9 +51,6 @@ class Game:
         if len(available_okaymon) > 0:
             okaymon = available_okaymon[random.randint(0,len(available_okaymon)-1)]
             self.find_player(token[0].player).exchange_token(token, okaymon)
-        # find a rando okaymon this token can afford
-        # call find_player(token[0].player).exchange_token(token, okaymon)
-        pass
 
     def open_okayballs(self):
         for ball in filter(lambda b: b.gen == self.gen, self.okayballs):
@@ -63,8 +63,10 @@ class Game:
             if roll(CHANCE_PLAYER_OPTS_IN):
                 p.opt_in()
                 #opting in means you gonna buy a ball
+                # TODO: maybe remove this line and increase opt in chances?
                 self.sell_okayball(p)
-        for p in tqdm(self.active_players()):
+        # for p in tqdm(self.active_players()):
+        for p in self.active_players():
             # buy until you roll false
             while roll(CHANCE_PLAYER_BUYS_AGAIN):
                 self.sell_okayball(p)
@@ -74,7 +76,8 @@ class Game:
         data.batch_update(self.okaymon)
     def market_okaymon(self):
         print('Players have their Okayballs, time to spend them!')
-        for p in tqdm(self.active_players()):
+        # for p in tqdm(self.active_players()):
+        for p in self.active_players():
             # need to update tokens, unless it just does is for me?
             while roll(CHANCE_PLAYER_EXCHANGES) and p.okayballs:
                 tokens = p.tokens()
