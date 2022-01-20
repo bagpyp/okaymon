@@ -4,10 +4,8 @@ from secrets import token_hex
 
 from settings import TOKEN_COMPLEXITY
 
-
 def path(type):
     return f"data/{type}.pkl"
-
 
 class Asset:
     id: str
@@ -36,7 +34,6 @@ class Asset:
             path(self.type)
         )
 
-
 def pickle(assets: list[Asset]):
     pd.DataFrame(
         [
@@ -50,7 +47,6 @@ def pickle(assets: list[Asset]):
             assets[0].type
         )
     )
-
 
 def batch_update(assets: list[Asset]):
     df = pd.read_pickle(

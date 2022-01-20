@@ -8,12 +8,30 @@ You must have two files to play this game,
    - a 10-line file containing color names in _increasing order_ of value
 2. in/natures.txt
    - a file containing 2000 _unique_ natures
+    
+## To tweak 
+  
+1. navigate to `main.py`
+2. input an n-tuple of integers whose product = 2000
+```
+# distribution
+Game((20,100)).play()
+```
   
 ## To run
   
 ```bash
 python3 -m pip install -r requirements.txt
-python3 game.py
+python3 main.py
 ```
+  
+  
+## Output
+  
+It'll take about 6 minutes to run a whole drop simulation, then you'll see some graphs I guess 
 
-You should see pickle files appear in data/ which will hold the state of the game.
+### Score disctribution by gen 
+  
+![graphs and shit](img/output.png)
+  
+  

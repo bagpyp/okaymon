@@ -1,8 +1,9 @@
 
 #%% 
 import random
-# from tqdm import tqdm
-from collections import Counter
+from tqdm import tqdm
+import pandas as pd
+import matplotlib.pyplot as plt
 
 import data
 import generator
@@ -10,17 +11,19 @@ from okayball import Okayball
 from okaymon import Okaymon
 from player import Player
 from settings import (
+    BIG_TRAIT_NAMES,
     GENERATIONS,
+    OKAYMON,
     CHANCE_PLAYER_OPTS_IN, 
     CHANCE_PLAYER_BUYS_AGAIN,
     CHANCE_PLAYER_EXCHANGES
 )
 
-# print = tqdm.write
 def roll(chances):
     return random.random() < chances
 
 class Game:
+    dist: tuple[int]
     gen: int
     okayballs: list[Okayball]
     okaymon: list[Okaymon]
@@ -36,9 +39,9 @@ class Game:
     def unavailable_okaymon(self):
         return [m for m in self.okaymon if not m.is_available]
     def find_player(self, player_id):
-        # may need to increase token complexity
         return [p for p in self.players if p.id == player_id][0]
 
+    # exchange utils
     def sell_okayball(self, player):
         available_okayballs = self.available_okayballs()
         if len(available_okayballs) > 0:
@@ -52,12 +55,12 @@ class Game:
             okaymon = available_okaymon[random.randint(0,len(available_okaymon)-1)]
             self.find_player(token[0].player).exchange_token(token, okaymon)
 
+    # market actions
     def open_okayballs(self):
         for ball in filter(lambda b: b.gen == self.gen, self.okayballs):
             ball.is_available = True
         data.batch_update(self.okayballs)
     def market_okayballs(self):
-        print('Open season for okayballs, players are playing!')
         # players who aren't playing yet have a chance to opt in
         for p in self.inactive_players():
             if roll(CHANCE_PLAYER_OPTS_IN):
@@ -65,8 +68,8 @@ class Game:
                 #opting in means you gonna buy a ball
                 # TODO: maybe remove this line and increase opt in chances?
                 self.sell_okayball(p)
-        # for p in tqdm(self.active_players()):
-        for p in self.active_players():
+        for p in tqdm(self.active_players()):
+        # for p in self.active_players():
             # buy until you roll false
             while roll(CHANCE_PLAYER_BUYS_AGAIN):
                 self.sell_okayball(p)
@@ -75,21 +78,57 @@ class Game:
             okaymon.is_available = True
         data.batch_update(self.okaymon)
     def market_okaymon(self):
-        print('Players have their Okayballs, time to spend them!')
-        # for p in tqdm(self.active_players()):
-        for p in self.active_players():
+        for p in tqdm(self.active_players()):
+        # for p in self.active_players():
             # need to update tokens, unless it just does is for me?
             while roll(CHANCE_PLAYER_EXCHANGES) and p.okayballs:
                 tokens = p.tokens()
                 random_token = tokens[random.randint(0, len(tokens)-1)]
                 self.exchange_token(random_token)
 
-    def __init__(self):
+    # initializer
+    def __init__(self, dist):
         self.gen = 0
+        self.dist = dist
         self.okayballs = generator.generate_okayballs()
-        self.okaymon = generator.generate_okaymon()
+        self.okaymon = generator.generate_okaymon(self.dist)
         self.players = generator.generate_players()
 
+    @staticmethod
+    def scored_okaymon(i = 0):
+        okm = pd.read_pickle('data/okaymon.pkl')
+        ok = okm[okm.is_available == False].sort_values(by='modified')
+        if i:
+            ok = ok.iloc[:i+1,:]
+        maximum = int(OKAYMON/GENERATIONS)
+        score = ok.gen.map(dict(ok.gen.value_counts()*-1 + maximum + 1))
+        for c in [c for c in ok.columns if c in BIG_TRAIT_NAMES]:
+            nunique = ok[c].nunique()
+            if nunique:
+                maximum= int(OKAYMON/nunique)
+                score += ok[c].map(dict(ok[c].value_counts()*-1 + maximum + 1))
+        ok['score'] = score
+        return ok
+
+    @staticmethod
+    def plot(evos=0):
+        okm = pd.read_pickle('data/okaymon.pkl')
+        ok = okm[okm.is_available == False]
+        if evos:
+            for i in range(0,int(len(ok)),evos):
+                df = Game.scored_okaymon(i)
+                df.groupby('gen').score.hist(bins=50)
+                plt.pause(.01)
+                plt.gcf().clear()
+        else:
+            ok = Game.scored_okaymon()
+            ok.groupby('gen').score.hist(bins=50)
+            plt.pause(.1)
+            plt.gcf().clear()
+            for i,g in ok.groupby('gen'):
+                g.set_index('modified').sort_index().score.plot()
+    
+    # main
     def play(self):
         print("Let the games begin!")
         for gen in range(GENERATIONS):
@@ -99,8 +138,3 @@ class Game:
             self.market_okayballs()
             self.open_okaymon()
             self.market_okaymon()
-
-if __name__ == '__main__':
-    game = Game()
-    game.play()
-

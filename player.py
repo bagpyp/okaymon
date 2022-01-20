@@ -4,9 +4,6 @@ from okayball import Okayball
 from okaymon import Okaymon
 from data import Asset
 
-from settings import TOKEN_COMPLEXITY
-from errors import AllowablePurchasesError
-
 class Player(Asset):
     wallet: Wallet
     okayballs: list[Okayball]
@@ -17,12 +14,9 @@ class Player(Asset):
         self.is_playing = True
 
     def purchase_okayball(self, ball: Okayball):
-        if self.wallet.can_afford(ball):
-            ball.assign_to_player(self.id)
-            self.wallet.purchaseRecord[ball.gen] += 1
-            self.okayballs.append(ball)
-        else: 
-            raise AllowablePurchasesError(self.wallet.purchaseRecord)
+        ball.assign_to_player(self.id)
+        self.wallet.purchaseRecord[ball.gen] += 1
+        self.okayballs.append(ball)
     def tokens(self):
         tokens = []
         for gen in {b.gen for b in self.okayballs}:
