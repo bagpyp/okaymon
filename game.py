@@ -91,7 +91,7 @@ class Game:
                 # and the second!
                 if roll(CHANCES_PLAYER_PLAYS_STRATEGICALLY):
                     # {2: 1993, 1: 955, 0: 816}
-                    counts_left = Game.scored_hcaptured=False
+                    counts_left = Game.scored_okaymon(captured=False
                     ).groupby('gen').gen.count().sort_values(ascending=False
                     ).to_dict()
                     token_gens = [get_gen_from_token(t) for t in tokens]
