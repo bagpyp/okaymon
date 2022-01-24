@@ -12,6 +12,7 @@ from okaymon import Okaymon
 from player import Player
 from settings import (
     BIG_TRAIT_NAMES,
+    CHANCES_PLAYER_PLAYS_STRATEGICALLY,
     GENERATIONS,
     OKAYMON,
     CHANCE_PLAYER_OPTS_IN, 
@@ -19,6 +20,8 @@ from settings import (
     CHANCE_PLAYER_EXCHANGES
 )
 
+def get_gen_from_token(token):
+    return token[0].gen - (len(token)-1)
 def roll(chances):
     return random.random() < chances
 
@@ -83,8 +86,21 @@ class Game:
             # need to update tokens, unless it just does is for me?
             while roll(CHANCE_PLAYER_EXCHANGES) and p.okayballs:
                 tokens = p.tokens()
-                random_token = tokens[random.randint(0, len(tokens)-1)]
-                self.exchange_token(random_token)
+                # each token corresponds to a single gen
+                # if we know which gen is the rarest, we can give priorty to that gen
+                # and the second!
+                if roll(CHANCES_PLAYER_PLAYS_STRATEGICALLY):
+                    # {2: 1993, 1: 955, 0: 816}
+                    counts_left = Game.scored_hcaptured=False
+                    ).groupby('gen').gen.count().sort_values(ascending=False
+                    ).to_dict()
+                    token_gens = [get_gen_from_token(t) for t in tokens]
+                    # [2, 1, 0]
+
+                    token = tokens[random.randint(0, len(tokens)-1)]
+                else:
+                    token = tokens[random.randint(0, len(tokens)-1)]
+                self.exchange_token(token)
 
     # initializer
     def __init__(self, dist):
@@ -95,9 +111,9 @@ class Game:
         self.players = generator.generate_players()
 
     @staticmethod
-    def scored_okaymon(i = 0):
+    def scored_okaymon(i = 0, captured=True):
         okm = pd.read_pickle('data/okaymon.pkl')
-        ok = okm[okm.is_available == False].sort_values(by='modified')
+        ok = okm[okm.is_available != captured].sort_values(by='modified')
         if i:
             ok = ok.iloc[:i+1,:]
         maximum = int(OKAYMON/GENERATIONS)
@@ -109,29 +125,14 @@ class Game:
                 score += ok[c].map(dict(ok[c].value_counts()*-1 + maximum + 1))
         ok['score'] = score
         return ok
-
-    @staticmethod
-    def plot(evos=0):
-        okm = pd.read_pickle('data/okaymon.pkl')
-        ok = okm[okm.is_available == False]
-        if evos:
-            for i in range(0,int(len(ok)),evos):
-                df = Game.scored_okaymon(i)
-                df.groupby('gen').score.hist(bins=50)
-                plt.pause(.01)
-                plt.gcf().clear()
-        else:
-            ok = Game.scored_okaymon()
-            ok.groupby('gen').score.hist(bins=50)
-            plt.pause(.1)
-            plt.gcf().clear()
-            for i,g in ok.groupby('gen'):
-                g.set_index('modified').sort_index().score.plot()
     
     # main
     def play(self):
         print("Let the games begin!")
         for gen in range(GENERATIONS):
+            if gen == 2:
+                # after you break here, put a break at tokens = p.tokens()
+                brrrreak = True
             print(f"Generation {gen}:")
             self.gen = gen
             self.open_okayballs()

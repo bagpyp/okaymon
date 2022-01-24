@@ -22,7 +22,9 @@ class Player(Asset):
         for gen in {b.gen for b in self.okayballs}:
             gen_balls = list(filter(lambda b: b.gen == gen, self.okayballs))
             for i in range(len(gen_balls)):
-                tokens.append(gen_balls[:min(i+1, gen+2)])
+                to_append = gen_balls[:min(i+1, gen+1)]
+                if to_append not in tokens:
+                    tokens.append(to_append)
         return tokens
     def exchange_token(self, token: list[Okayball], okaymon: Okaymon):
         okaymon.assign_to_player(self.id)
