@@ -2,6 +2,7 @@
 
 from random import randint
 from itertools import product
+import json
 
 from data import pickle
 from okayball import Okayball
@@ -33,21 +34,29 @@ def generate_okaymon(dist):
         )
     )
     """okaymon"""
+    with open('in/okaymon.json') as f:
+        jokaymon = json.loads(f.read())
     okaymon = []
-    for gen in range(GENERATIONS):
-        # colors = traits[gen]["colors"]
-        natures = pool.copy()
-        for j in range(int(OKAYMON/GENERATIONS)):
-            nature = natures.pop(randint(0,len(natures)-1))
-            okaymon.append(
-                Okaymon(
-                    gen,
-                    {
-                        BIG_TRAIT_NAMES[i]:nature[i] 
-                        for i in range(len(dist))
-                    }
-                )
-            )
+    for j in jokaymon:
+        gen = j.pop('gen')
+        okaymon.append(Okaymon(
+            gen,
+            j
+        ))
+    # for gen in range(GENERATIONS):
+    #     # colors = traits[gen]["colors"]
+    #     natures = pool.copy()
+    #     for j in range(int(OKAYMON/GENERATIONS)):
+    #         nature = natures.pop(randint(0,len(natures)-1))
+    #         okaymon.append(
+    #             Okaymon(
+    #                 gen,
+    #                 {
+    #                     BIG_TRAIT_NAMES[i]:nature[i] 
+    #                     for i in range(len(dist))
+    #                 }
+    #             )
+    #         )
     pickle(okaymon)
     return okaymon
 

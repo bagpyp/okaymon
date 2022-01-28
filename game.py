@@ -92,12 +92,14 @@ class Game:
                 if roll(CHANCES_PLAYER_PLAYS_STRATEGICALLY):
                     # {2: 1993, 1: 955, 0: 816}
                     counts_left = Game.scored_okaymon(captured=False
-                    ).groupby('gen').gen.count().sort_values(ascending=False
+                    ).gen.value_counts().sort_values(ascending=False
                     ).to_dict()
                     token_gens = [get_gen_from_token(t) for t in tokens]
                     # [2, 1, 0]
-
-                    token = tokens[random.randint(0, len(tokens)-1)]
+                    for k in counts_left.keys():
+                        if k in token_gens:
+                            token = tokens[token_gens.index(k)]
+                            break
                 else:
                     token = tokens[random.randint(0, len(tokens)-1)]
                 self.exchange_token(token)
@@ -116,14 +118,16 @@ class Game:
         ok = okm[okm.is_available != captured].sort_values(by='modified')
         if i:
             ok = ok.iloc[:i+1,:]
-        maximum = int(OKAYMON/GENERATIONS)
-        score = ok.gen.map(dict(ok.gen.value_counts()*-1 + maximum + 1))
-        for c in [c for c in ok.columns if c in BIG_TRAIT_NAMES]:
-            nunique = ok[c].nunique()
+        maximum = int(OKAYMON/GENERATIONS) + 1 # 2001
+        score = maximum - ok.gen.map(dict(ok.gen.value_counts()))
+        for c in [c for c in ok.columns if c in BIG_TRAIT_NAMES and c != 'Sect']:
+            nunique = ok[c].nunique() # 25
             if nunique:
-                maximum= int(OKAYMON/nunique)
-                score += ok[c].map(dict(ok[c].value_counts()*-1 + maximum + 1))
+                maximum= int(OKAYMON/nunique) + 1 # 401
+                score += maximum - ok[c].map(dict(ok[c].value_counts()))
         ok['score'] = score
+        bigger_sect = ok.Sect.value_counts().idxmax()
+        ok.loc[ok.Sect == bigger_sect, 'score'] += 1
         return ok
     
     # main
