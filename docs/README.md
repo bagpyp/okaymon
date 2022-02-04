@@ -1,15 +1,6 @@
 ![OKAYMON](img/okaymon.png)
 
 # A python library for playing the Okaymon Gamified Drop without spending thousands of dollars
-    
-## To tweak 
-  
-1. navigate to `main.py`
-2. input an n-tuple of integers whose product = 2000
-```
-# distribution
-Game((20,100)).play()
-```
   
 ## To run
   
