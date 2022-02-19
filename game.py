@@ -54,11 +54,12 @@ class Game:
                 player.purchase_okayball(ball)
 
     def exchange_token(self, token):
-        gen = token[0].gen - (len(token)-1)
-        available_okaymon = self.available_okaymon(gen)
-        if len(available_okaymon) > 0:
-            okaymon = available_okaymon[random.randint(0,len(available_okaymon)-1)]
-            self.find_player(token[0].player).exchange_token(token, okaymon)
+        if token:
+            gen = token[0].gen - (len(token)-1)
+            available_okaymon = self.available_okaymon(gen)
+            if len(available_okaymon) > 0:
+                okaymon = available_okaymon[random.randint(0,len(available_okaymon)-1)]
+                self.find_player(token[0].player).exchange_token(token, okaymon)
 
     # market actions
     def open_okayballs(self):
@@ -90,6 +91,7 @@ class Game:
             # need to update tokens, unless it just does is for me?
             while roll(CHANCE_PLAYER_EXCHANGES) and p.okayballs:
                 tokens = p.tokens()
+                token = None
                 # each token corresponds to a single gen
                 # if we know which gen is the rarest, we can give priorty to that gen
                 # and the second!
@@ -132,8 +134,9 @@ class Game:
                 maximum= int(OKAYMON/nunique) + 1 # 401
                 score += maximum - ok[c].map(dict(ok[c].value_counts()))
         ok['score'] = score
-        bigger_sect = ok.Sect.value_counts().idxmax()
-        ok.loc[ok.Sect == bigger_sect, 'score'] += 1
+        if len(ok):
+            bigger_sect = ok.Sect.value_counts().idxmax()
+            ok.loc[ok.Sect == bigger_sect, 'score'] += 1
         return ok
     
     # main
@@ -150,5 +153,5 @@ class Game:
             self.open_okaymon() 
             print('exchangey time!')
             self.market_okaymon(gens_count = gens_count) 
-        for i in range(3):
+        for i in range(10):
             self.market_okaymon()
