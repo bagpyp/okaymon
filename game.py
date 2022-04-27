@@ -28,9 +28,9 @@ def roll(chances):
 class Game:
     dist: tuple[int]
     gen: int
-    okayballs: list[Okayball]
-    okaymon: list[Okaymon]
-    players: list[Player]
+    okayballs: "list[Okayball]"
+    okaymon: "list[Okaymon]"
+    players: "list[Player]"
     def active_players(self):
         return [player for player in self.players if player.is_playing]
     def inactive_players(self):

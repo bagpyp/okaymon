@@ -6,8 +6,8 @@ from data import Asset
 
 class Player(Asset):
     wallet: Wallet
-    okayballs: list[Okayball]
-    okaymon: list[Okaymon]
+    okayballs: "list[Okayball]"
+    okaymon: "list[Okaymon]"
     is_playing: bool
 
     def opt_in(self):
@@ -26,7 +26,7 @@ class Player(Asset):
                 if to_append not in tokens:
                     tokens.append(to_append)
         return tokens
-    def exchange_token(self, token: list[Okayball], okaymon: Okaymon):
+    def exchange_token(self, token: "list[Okayball]", okaymon: Okaymon):
         okaymon.assign_to_player(self.id)
         self.okaymon.append(okaymon)
         for okayball in token:
