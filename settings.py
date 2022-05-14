@@ -10,13 +10,14 @@ MAX_GEN_SCORE = int(OKAYMON/GENERATIONS)
 
 with open('in/traits.txt') as f:
     TRAIT_NAMES = f.read().splitlines()
-BIG_TRAIT_NAMES = [f"t{i}" for i in range(8)] # max numer of factors of 10k
+BIG_TRAIT_NAMES = ['Item', 'Sect', 'Nature', 'Color'] # max numer of factors of 10k
 
 PLAYERS = 10000 # 10000
 
 """statistics"""
-CHANCE_PLAYER_OPTS_IN = 1/3
-CHANCE_PLAYER_BUYS_AGAIN = 1/2
-CHANCE_PLAYER_EXCHANGES = 3/4
-CHANCE_PLAYER_EXCHANGES_AGAIN = 5/8
+# CHANCE_PLAYER_OPTS_IN = 1/5
+# CHANCE_PLAYER_BUYS_AGAIN = 1/8
+CHANCE_PLAYER_EXCHANGES = 1/2
+CHANCE_PLAYER_EXCHANGES_AGAIN = 5/6
+# NEVER GO ABOVE .5
 CHANCES_PLAYER_PLAYS_STRATEGICALLY = 1/2
