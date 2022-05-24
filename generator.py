@@ -1,7 +1,6 @@
 #%%
 
 from random import randint
-from itertools import product
 import json
 
 from data import pickle
@@ -10,10 +9,7 @@ from player import Player
 from okaymon import Okaymon
 from settings import (
     GENERATIONS,
-    BIG_TRAIT_NAMES,
-    OKAYMON,
     OKAYBALLS,
-    TRAIT_NAMES,
     PLAYERS
 )
 

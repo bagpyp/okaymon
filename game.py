@@ -3,7 +3,6 @@
 import random
 from tqdm import tqdm
 import pandas as pd
-import matplotlib.pyplot as plt
 
 import data
 import generator
@@ -13,10 +12,11 @@ from player import Player
 from settings import (
     BIG_TRAIT_NAMES,
     CHANCES_PLAYER_PLAYS_STRATEGICALLY,
+    EXTRA_ROUNDS,
     GENERATIONS,
     OKAYMON,
-    # CHANCE_PLAYER_OPTS_IN, 
-    # CHANCE_PLAYER_BUYS_AGAIN,
+    CHANCE_PLAYER_OPTS_IN, 
+    CHANCE_PLAYER_BUYS_AGAIN,
     CHANCE_PLAYER_EXCHANGES
 )
 
@@ -67,19 +67,10 @@ class Game:
             ball.is_available = True
         data.batch_update(self.okayballs)
     def market_okayballs(self):
-        # players who aren't playing yet have a chance to opt in
-        for p in random.sample(self.inactive_players(), PLAYERS_ADDED_PER_GEN):
-            p.opt_in()
-            # #opting in means you gonna buy a ball
-            # self.sell_okayball(p)
-        active_players = self.active_players()
-        while self.available_okayballs():
-            for p in tqdm(random.sample(active_players, len(active_players))):
-            # for p in self.active_players():
+        while len(self.okayballs) > 0:
+            for p in self.active_players():
                 # buy until you roll false
-                # while roll(CHANCE_PLAYER_BUYS_AGAIN):
-                #     self.sell_okayball(p)
-                for i in range(random.randint(1,6)):
+                while roll(CHANCE_PLAYER_BUYS_AGAIN):
                     self.sell_okayball(p)
     def open_okaymon(self):
         for okaymon in filter(lambda b: b.gen == self.gen, self.okaymon):
@@ -141,17 +132,15 @@ class Game:
     
     # main
     def play(self, gens_count = True):
-        print("Let the games begin!")
+        
         for gen in range(GENERATIONS):
-            if gen == 2:
-                # after you break here, put a break at tokens = p.tokens()
-                brrrreak = True
-            print(f"Generation {gen + 1}:")
+            print(f"gen {gen + 1}:")
             self.gen = gen
             self.open_okayballs()
             self.market_okayballs()
             self.open_okaymon() 
-            print('exchangey time!')
             self.market_okaymon(gens_count = gens_count) 
-        for i in range(10):
-            self.market_okaymon()
+        if EXTRA_ROUNDS > 0:
+            print(f'playing {EXTRA_ROUNDS} more rounds...')
+            for _ in range(EXTRA_ROUNDS):
+                self.market_okaymon()

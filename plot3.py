@@ -7,3 +7,5 @@ import matplotlib.pyplot as plt
 pd.options.display.max_rows = 100
 
 ok = Game.scored_okaymon()
+
+

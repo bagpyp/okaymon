@@ -19,4 +19,4 @@ def plot(evos=0):
             g.set_index('modified').sort_index().score.plot()
 
 if __name__ == '__main__':
-    plot(100)
+    plot(1000)
