@@ -67,11 +67,13 @@ class Game:
             ball.is_available = True
         data.batch_update(self.okayballs)
     def market_okayballs(self):
-        while len(self.okayballs) > 0:
-            for p in self.active_players():
-                # buy until you roll false
-                while roll(CHANCE_PLAYER_BUYS_AGAIN):
-                    self.sell_okayball(p)
+        for p in self.players:
+            if roll(CHANCE_PLAYER_OPTS_IN):
+                p.opt_in()
+        for p in self.active_players():
+            # buy until you roll false
+            while roll(CHANCE_PLAYER_BUYS_AGAIN):
+                self.sell_okayball(p)
     def open_okaymon(self):
         for okaymon in filter(lambda b: b.gen == self.gen, self.okaymon):
             okaymon.is_available = True
@@ -82,7 +84,6 @@ class Game:
             # need to update tokens, unless it just does is for me?
             while roll(CHANCE_PLAYER_EXCHANGES) and p.okayballs:
                 tokens = p.tokens()
-                token = None
                 # each token corresponds to a single gen
                 # if we know which gen is the rarest, we can give priorty to that gen
                 # and the second!
@@ -94,14 +95,13 @@ class Game:
                     token_gens = [get_gen_from_token(t) for t in tokens]
                     # [2, 1, 0]
                     for k in counts_left.keys():
-                        if k in token_gens:
-                            token = tokens[token_gens.index(k)]
+                        if int(k) in token_gens:
+                            token = tokens[token_gens.index(int(k))]
                             break
                 else:
                     token = tokens[random.randint(0, len(tokens)-1)]
                 self.exchange_token(token)
 
-    # initializer
     def __init__(self):
         self.gen = 0
         self.okayballs = generator.generate_okayballs()
@@ -144,3 +144,6 @@ class Game:
             print(f'playing {EXTRA_ROUNDS} more rounds...')
             for _ in range(EXTRA_ROUNDS):
                 self.market_okaymon()
+
+        for name in ['okayball', 'okaymon']:
+            pd.read_pickle(f'data/{name}.pkl').to_excel(f'data/{name}.xlsx')

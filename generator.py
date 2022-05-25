@@ -27,7 +27,8 @@ def generate_okaymon():
     for j in jokaymon:
         gen = j.pop('gen')
         okaymon.append(Okaymon(
-            gen,
+            # this is so that the json can say "gen: 1" instead of "gen: 0" for nathan
+            gen - 1,
             j
         ))
     pickle(okaymon)
