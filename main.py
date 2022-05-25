@@ -2,8 +2,10 @@
 from game import Game
 from plot import plot
 
+gens_count = True
+
 if __name__ == '__main__':
     game = Game()
-    game.play(gens_count=True)
-    plot(gens_count=True)
+    game.play(gens_count=gens_count)
+    plot(gens_count=gens_count)
     
